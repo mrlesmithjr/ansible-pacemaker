@@ -59,6 +59,7 @@
   notify:
     - restart corosync
     - restart pacemaker
+  register: corosync_reconfigured
 
 - name: debian | configuring corosync service to start
   template:
@@ -74,20 +75,24 @@
 - name: debian | ensuring corosync and pacemaker are running in order to configure cluster properties
   service:
     name: "{{ item }}"
-    state: started
+    state: restarted
+    sleep: 10
   with_items:
     - corosync
     - pacemaker
+  when: corosync_reconfigured.changed
 
 - name: debian | configuring pacemaker cluster properties
   pacemaker: >
     property "{{ item.property }}"="{{ item.value }}"
-    commit=yes
   with_items: pacemaker_cluster_settings
+  notify:
+    - pacemaker commit
   when: pacemaker_cluster_settings is defined
 
 - name: debian | disabling pacemaker STONITH
   pacemaker: >
     property stonith-enabled=false
-    commit=yes
-  when: pacemaker_disable_stonith is defined and pacemaker_disable_stonith  
+  notify:
+    - pacemaker commit
+  when: pacemaker_disable_stonith is defined and pacemaker_disable_stonith

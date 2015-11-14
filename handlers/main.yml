@@ -1,5 +1,8 @@
 ---
 # handlers file for ansible-pacemaker
+- name: pacemaker commit
+  pacemaker: commit
+
 - name: restart corosync
   service:
     name: corosync
@@ -8,4 +11,5 @@
 - name: restart pacemaker
   service:
     name: pacemaker
+    sleep: 10
     state: restarted
