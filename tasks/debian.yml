@@ -82,6 +82,14 @@
     - pacemaker
   when: corosync_reconfigured.changed
 
+- name: debian | ensuring corosync and pacemaker start on boot
+  service:
+    name: "{{ item }}"
+    enabled: yes
+  with_items:
+    - corosync
+    - pacemaker
+
 - name: debian | configuring pacemaker cluster properties
   pacemaker: >
     property "{{ item.property }}"="{{ item.value }}"
