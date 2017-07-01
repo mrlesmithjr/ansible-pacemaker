@@ -47,8 +47,24 @@
   when: >
         pacemaker_cluster_resources is defined and
         (inventory_hostname == pacemaker_primary_server) and
+        item['options'] is defined and
         (item['resource_id'] and
         item['options']|join(' ') not in _pcs_resource_show['stdout'] and
+        item['action']|lower == 'create')
+
+- name: cluster | Creating Cluster Resources
+  command: >
+           pcs resource create {{ item['resource_id'] }}
+           {{ item['provider'] }}
+           {% if item['op'] is defined %}op {{ item['op'] }}{% endif %}
+           {% if item['op_options'] is defined %}{{ item['op_options']|join(' ') }}{% endif %}
+  become: true
+  with_items: '{{ pacemaker_cluster_resources }}'
+  when: >
+        pacemaker_cluster_resources is defined and
+        (inventory_hostname == pacemaker_primary_server) and
+        item['options'] is not defined and
+        (item['resource_id'] not in _pcs_resource_show['stdout'] and
         item['action']|lower == 'create')
 
 - name: cluster | Adding Cluster colocation Constraints

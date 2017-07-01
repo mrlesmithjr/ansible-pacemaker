@@ -44,3 +44,9 @@
   when: >
         _corosync_auth_key_generated['changed'] and
         (inventory_hostname == pacemaker_primary_server)
+
+- name: debian | Ensuring /etc/corosync/uidgid.d Folder Exists
+  file:
+    path: "/etc/corosync/uidgid.d"
+    state: "directory"
+  become: true
