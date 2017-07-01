@@ -16,6 +16,7 @@ totem {
 {% for host in groups[pacemaker_cluster_group] %}
 		node {
 			ring0_addr: {{ hostvars[host]['corosync_bindnet_addr'] }}
+			name: {{ host }}
 			nodeid: {{ loop.index + 1 }}
 		}
 {% endfor %}
