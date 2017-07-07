@@ -28,6 +28,9 @@ corosync_mcastaddr: 239.255.42.1
 # Define port number to configure as cluster port.
 corosync_mcastport: 5405
 
+# Defines if unicast mode should be used rather than multicast
+corosync_unicast_mode: false
+
 # Means that, When starting up a cluster (all nodes down), the cluster quorum
 # is held until all nodes are online and have joined the cluster for the first
 # time. This parameter is new in Corosync 2.0.
@@ -85,7 +88,11 @@ pacemaker_cluster_settings: []
   # - property: 'cluster-recheck-interval'
   #   value: 5min
 
-pacemaker_hacluster_password: 'haclusteradmin'
+# Define hacluster user password for webUI
+#
+# Generate new password
+# echo "haclusteradmin" | sha512sum
+pacemaker_hacluster_password: 'f8d1feb7105dfbd2859a17512c7414f89b70dfef815b177444b897edec19a18724f8e9686f0e2daa41c48eb9b0511bae9e659a756f17c39fedb6d68b9230a53c'
 
 # Defines if host is considered to be primary
 # this should be set in host_vars/hostname as true for only one host
