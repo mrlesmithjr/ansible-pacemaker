@@ -6,11 +6,12 @@
 - name: config | Setting hacluster password
   user:
     name: "hacluster"
-    password: "{{ pacemaker_hacluster_password| password_hash('sha512', ansible_hostname) }}"
+    password: "{{ pacemaker_hacluster_password }}"
   become: true
 
 - name: config | Capturing Corosync Auth Key
-  command: "cat {{ corosync_authkey_file }}"
+  slurp:
+    src: "{{ corosync_authkey_file }}"
   become: true
   register: "_corosync_authkey_"
   no_log: true
